@@ -8,6 +8,7 @@ import { FaArrowUpLong } from "react-icons/fa6";
 import { dataContext, prevUser, user } from "../context/UserContext";
 import Chat from "./Chat";
 import { generateResponse } from "../gemini";
+import { query } from "../huggingFace";
 
 const Home = () => {
   let {
@@ -21,26 +22,29 @@ const Home = () => {
     setFeature,
     showResult,
     setShowResult,
-    prevFeature, setPrevFeature,
+    prevFeature,
+    setPrevFeature,
+    genImgUrl,
+    setGenImgUrl,
   } = useContext(dataContext);
 
   async function handleSubmit(e) {
-
     setStartRes(true);
-    setPrevFeature(feature)
+    setPrevFeature(feature);
 
     setShowResult("");
     prevUser.data = user.data;
     prevUser.mime_type = user.mime_type;
     prevUser.imgUrl = user.imgUrl;
     prevUser.prompt = input;
-    setInput("");
-    let result = await generateResponse();
-    setShowResult(result);
-    setFeature("chat")
     user.data = null;
     user.mime_type = null;
     user.imgUrl = null;
+    setInput("");
+    let result = await generateResponse();
+    setShowResult(result);
+    setFeature("chat");
+
   }
 
   // ---------Handling the Image Fetched from Browsing-------------
@@ -58,14 +62,37 @@ const Home = () => {
     reader.readAsDataURL(file);
   }
 
+  // Handling the Image Coming form the Hugging Face
+  async function handleGenerateImg() {
+    setStartRes(true);
+    setPrevFeature(feature);
+    setGenImgUrl("")
+    prevUser.prompt = input;
+    let result = await query().then((e) => {
+      let url = URL.createObjectURL(e);
+      setGenImgUrl(url);
+    });
+    setInput("");
+    setFeature("chat");
+  }
+
   return (
     <div className="home">
       {/* Navbar Section */}
       <nav>
-        <div className="logo" onClick={()=>{
-          setStartRes(false)
-          setFeature("chat")
-        }}>Smart AI Bot</div>
+        <div
+          className="logo"
+          onClick={() => {
+            setStartRes(false);
+            setFeature("chat");
+                user.data = null;
+                user.mime_type = null;
+                user.imgUrl = null;
+                setPopUP(false)
+          }}
+        >
+          Smart AI Bot
+        </div>
       </nav>
 
       {/* ---------------Browse Images------------------ */}
@@ -111,26 +138,39 @@ const Home = () => {
         onSubmit={(e) => {
           e.preventDefault();
           if (input) {
-            handleSubmit(e);
+            if (feature == "genimg") {
+              handleGenerateImg();
+            } else {
+              handleSubmit(e);
+            }
           }
         }}
       >
+
+        {/* To display image above the chat */}
+        <img src={user.imgUrl} alt="" id="input-img"/>
+
         {popUp ? (
           <div className="pop-up">
             <div
               className="select-up"
               onClick={() => {
                 setPopUP(false);
-                setFeature("chat")
+                setFeature("chat");
                 document.getElementById("inputImg").click();
               }}
             >
               <RiImageAddLine />
               <span>Upload Image</span>
             </div>
-            <div className="select-gen" onClick={() => {
-              setPopUP(false);
-              setFeature("genImg")}}>
+            <div
+              className="select-gen"
+              onClick={() => {
+                setFeature("genimg");
+                setPopUP(false);
+                
+              }}
+            >
               <RiImageAiFill />
               <span>Generate Image</span>
             </div>
