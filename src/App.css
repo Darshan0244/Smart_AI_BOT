@@ -71,7 +71,7 @@ nav{
   height: 25px;
   color: rgb(255, 136, 0);
 }
-
+    
 .upImg:hover, .genImg:hover, .chat:hover{
   background-color: rgba(43, 43, 43, 0.74);
 }
