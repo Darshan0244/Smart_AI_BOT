@@ -1,13 +1,14 @@
 import { prevUser } from "./context/UserContext";
 
-const Api_Url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyCE8rMtvQ94nRw36T6qqxlKTZIHd6ucP_Q"
-// AIzaSyCE8rMtvQ94nRw36T6qqxlKTZIHd6ucP_Q
+
+const Api_Url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`
+// 
 
 export async function generateResponse() {
 
     let RequestOption={
         method:"POST",
-        Headers: {'Content-Type' : 'application/json'},
+        headers: {'Content-Type' : 'application/json'},
         body:JSON.stringify({
             "contents": [
     {

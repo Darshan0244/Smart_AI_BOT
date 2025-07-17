@@ -8,7 +8,7 @@ export async function query() {
         {
             headers: {
                 
-                Authorization: "Bearer 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",
+                Authorization: `Bearer ${import.meta.env.VITE_HUGGINGFACE_TOKEN}`,
                 "Content-Type": "application/json",
             },
             method: "POST",
