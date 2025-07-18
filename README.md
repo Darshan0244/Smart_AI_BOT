@@ -2,6 +2,9 @@
 
 A powerful, multi-modal AI assistant built with React that combines conversational AI capabilities with advanced image processing and generation features.
 
+![App Screenshot](https://github.com/Darshan0244/Smart_AI_BOT/blob/2ab11095ed1c3fc6bd51c95250b02628199bc401/applicationImages/Screenshot%202025-07-17%20220842.png?raw=true)
+
+
 ## 🚀 Features
 
 ### Core Capabilities
